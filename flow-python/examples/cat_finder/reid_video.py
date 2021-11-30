@@ -44,4 +44,6 @@ class ReIDVideo:
         if 'crop' in msg:
             msg['feature'] = self._model.inference(msg['crop'])
         # logger.info(image['features'])
+
+        logger.info(msg['features'])
         self.out.send(envelope)

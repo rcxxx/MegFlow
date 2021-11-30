@@ -52,7 +52,8 @@ class Detect:
         msg = envelope.msg
         msg['items'] = []
 
-        process = envelope.partial_id % self._interval == 0
+        # process = envelope.partial_id % self._interval == 0
+        process = True
         if process:
             data = msg['data']
             outputs = self._predictor.inference(data)
