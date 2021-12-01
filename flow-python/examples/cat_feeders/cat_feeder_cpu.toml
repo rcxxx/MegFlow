@@ -17,7 +17,7 @@ device_id = 0
 
 [[nodes]]
 name = "redis_proxy"
-ty = "RedisProxyDEBUG"
+ty = "RedisSearch"
 ip = "127.0.0.1"
 port = "6379"
 mode = "search"
@@ -26,7 +26,7 @@ prefix = "feature."
 
 [[nodes]]
 name = "reid_video"
-ty = "ReIDVideoINV"
+ty = "ReID"
 path = "models/cat_finder_models/resnet50.mge"
 device = "cpu"
 device_id = 1
@@ -53,11 +53,11 @@ connections = [
 
     [[graphs.nodes]]
     name = "track"
-    ty = "TrackDEBUG"
+    ty = "Track"
 
     [[graphs.nodes]]
     name = "shaper"
-    ty = "ShaperINV"
+    ty = "Shaper"
     mode = "BEST"
 
 

@@ -44,29 +44,25 @@ class ShaperINV:
                 if tid not in self._map:
                     self._map[tid] = envelope.repack(msg)
 
-                data = msg['data']
-                l, t, r, b = self.expand(box, data.shape[1], data.shape[0], 1.1)
-                crop = data[t:b, l:r]
-                assert crop is not None
-                quality = Quality.area(crop)
+                    data = msg['data']
+                    l, t, r, b = self.expand(box, data.shape[1], data.shape[0], 1.1)
+                    crop = data[t:b, l:r]
+                    assert crop is not None
 
-                if self._mode == 'BEST':
-                    tid_msg = self._map[tid].msg
+                    self._map[tid].msg['crop'] = crop
+                    self.out.send(self._map[tid])
 
-                    if 'quality' not in tid_msg:
-                        tid_msg['quality'] = -1
+                    logger.info(f'shaper: {tid}')
+                    logger.debug(f'↑↑↑↑↑↑-----------shaper------------------↑↑↑↑↑↑')
+                    return
+                else:
+                    logger.info(f'target {tid} has been shape')
 
-                    old_quality = tid_msg['quality']
-                    if quality > old_quality:
-                        tid_msg['quality'] = quality
-                        tid_msg['crop'] = crop
+            self.out.send(envelope)
+            logger.debug(f'↑↑↑↑↑↑-----------shaper------------------↑↑↑↑↑↑')
 
-        if 'failed_ids' in msg:
-            ids = msg['failed_ids']
-            if len(ids) > 0:
-                logger.debug(f'shaper recv failed_ids {ids}')
+            # logger.debug(f'↓↓↓↓↓↓-----------shaper------------------↓↓↓↓↓↓')
+            # logger.debug(f'↑↑↑↑↑↑-----------shaper------------------↑↑↑↑↑↑')
 
-                for id in ids:
-                    if id in self._map:
-                        self.out.send(self._map[id])
-                        self._map.pop(id)
+
+
