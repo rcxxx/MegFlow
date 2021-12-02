@@ -7,7 +7,7 @@ class Shaper:
     def __init__(self, name, args):
         self.name = name
         self._mode = args['mode']
-        self._map = dict()
+        self._shaper = dict()
 
     def expand(self, box, max_w, max_h, ratio):
         l = box[0]
@@ -30,37 +30,41 @@ class Shaper:
         return int(l), int(t), int(r), int(b)
 
     def exec(self):
+        #     msg['data']       -- frame
+        #     msg['items']      -- All detected cats
+        #     msg['process']    -- process
+        #     msg['tracks']     -- all tracked targets
+        #     msg['failed_ids'] -- all lost targets
+        # add msg['shaper']     -- all tracked crop
         envelope = self.inp.recv()
         if envelope is None:
-            self._map.clear()
+            self._shaper.clear()
             return
 
         msg = envelope.msg
         logger.debug(f'↓↓↓↓↓↓-----------shaper------------------↓↓↓↓↓↓')
         if 'tracks' in msg:
-            msg['shaper'] = []
             for track in msg['tracks']:
                 tid = track['tid']
                 box = track['bbox']
                 data = msg['data']
-                l, t, r, b = self.expand(box, data.shape[1], data.shape[0], 1.1)
-                crop = data[t:b, l:r]
-                assert crop is not None
-                msg['shaper'].append(crop)
-                logger.info(f'crop target: {tid} ')
 
-                # if tid not in self._map:
-                #     self._map[tid] = envelope.repack(msg)
-                #
-                #     data = msg['data']
-                #     l, t, r, b = self.expand(box, data.shape[1], data.shape[0], 1.1)
-                #     crop = data[t:b, l:r]
-                #     assert crop is not None
-                #     msg['shaper'].append(crop)
-                #
-                #     logger.info(f'shaper: {tid}')
-                # else:
-                #     logger.info(f'target: {tid} has been reid')
+                if tid not in self._shaper:
+                    l, t, r, b = self.expand(box, data.shape[1], data.shape[0], 1.1)
+                    crop = data[t:b, l:r]
+                    assert crop is not None
+                    self._shaper[tid] = crop
+                    logger.info(f'shaper target: {tid}')
+                else:
+                    logger.info(f'target: {tid} is being tracked')
+
+        if 'failed_ids' in msg:
+            fids = msg['failed_ids']
+            if len(fids) > 0:
+                for fid in fids:
+                    if fid in self._shaper:
+                        self._shaper.pop(fid)
 
         logger.debug(f'↑↑↑↑↑↑-----------shaper------------------↑↑↑↑↑↑')
+        msg['shaper'] = self._shaper
         self.out.send(envelope)

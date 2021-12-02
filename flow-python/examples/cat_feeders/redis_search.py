@@ -48,7 +48,7 @@ class RedisSearch:
         min_key = ''
         for k, v in self._db.items():
             dist = np.linalg.norm(v - feature)
-            logger.info(f'key: {k} dist: {dist}')
+            # logger.info(f'key: {k} dist: {dist}')
             if dist < min_dist:
                 min_key = k
                 min_dist = dist
@@ -60,27 +60,29 @@ class RedisSearch:
         return {"name": name, "distance": str(min_dist)}
 
     def exec(self):
+        #     msg['data']       -- frame
+        #     msg['items']      -- All detected cats
+        #     msg['process']    -- process
+        #     msg['tracks']     -- all tracked targets
+        #     msg['failed_ids'] -- all lost targets
+        #     msg['shaper']     -- all tracked crop
+        #     msg['features']   -- all crop reid
+        # add msg['results']    -- all reid results
         envelope = self.inp.recv()
         if envelope is None:
             return
         msg = envelope.msg
         items = msg['items']
         assert isinstance(items, list)
-
         r = redis.Redis(connection_pool=self._pool)
 
-        if self._mode == 'search':
-            msg['results'] = []
-            if 'features' in msg:
-                features = msg['features']
-                for feature in features:
-                    result = self.search_key(r, feature)
-                    logger.info(f'result : {result}')
-                    msg['results'].append(result)
+        results = dict()
+        if 'tracks' in msg:
+            features = msg['features']
+            for track in msg['tracks']:
+                tid = track['tid']
+                results[tid] = self.search_key(r, features[tid])
+                logger.info(f'target {tid} result : {results[tid]["name"]}')
 
-            self.out.send(envelope)
-            # self.out.send(envelope.repack(msg['results']))
-
-        else:
-            logger.error(f'unknown mode: {self._mode}')
-            self.out.send(envelope)
+        msg['results'] = results
+        self.out.send(envelope)

@@ -14,6 +14,11 @@ class Track:
         self._tracker = Tracker()
 
     def exec(self):
+        #     msg['data']       -- frame
+        #     msg['items']      -- All detected cats
+        #     msg['process']    -- process
+        # add msg['tracks']     -- all tracked targets
+        #     msg['failed_ids'] -- all lost targets
         envelope = self.inp.recv()
         if envelope is None:
             logger.info('stream tracker finish')
@@ -33,10 +38,7 @@ class Track:
                 logger.info(f'track target: {tid}')
 
             for failed_id in failed_ids:
-                tid = failed_id['tid']
-                logger.info(f'track target: {tid}')
+                logger.info(f'track target: {failed_id}')
 
             logger.debug(f'↑↑↑↑↑↑-----------track------------------↑↑↑↑↑↑')
-        # add msg['tracks']     -- all tracked targets
-        #     msg['failed_ids'] -- all lost targets
         self.out.send(envelope)

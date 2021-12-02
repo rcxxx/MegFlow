@@ -45,6 +45,9 @@ class Detect:
         return val
 
     def exec(self):
+        #     msg['data']    -- frame
+        # add msg['items']   -- All detected cats
+        #     msg['process'] -- process
         envelope = self.inp.recv()
         if envelope is None:
             return
@@ -83,7 +86,6 @@ class Detect:
                 msg['data'] = self._predictor.visual(outputs, data)
 
         msg['process'] = process
-        # add msg['items'] -- All detected cats
         self.out.send(envelope)
 
 

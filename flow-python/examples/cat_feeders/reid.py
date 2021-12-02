@@ -13,6 +13,7 @@ class ReID:
     def __init__(self, name, args):
         logger.info("loading Video ReidINV...")
         self.name = name
+        self._features = dict()
 
         # load ReID model and warmup
         self._model = PredictorLite(path=args['path'],
@@ -23,27 +24,42 @@ class ReID:
         logger.info(" ReIDVideo INV Reid loaded.")
 
     def exec(self):
+        #     msg['data']       -- frame
+        #     msg['items']      -- All detected cats
+        #     msg['process']    -- process
+        #     msg['tracks']     -- all tracked targets
+        #     msg['failed_ids'] -- all lost targets
+        #     msg['shaper']     -- all tracked crop
+        # add msg['features']   -- all crop reid
         envelope = self.inp.recv()
         if envelope is None:
             logger.warning('reid inp is empty')
+            self._features.clear()
             return
 
         msg = envelope.msg
 
         logger.debug(f'↓↓↓↓↓↓-----------reid------------------↓↓↓↓↓↓')
-        # for crop in image['shaper']:
-        # cv2.imwrite(f'reid_video_{envelope.partial_id}.jpg', crop)
-        # logger.info(f'envelope id {envelope.partial_id}')
 
-        msg['features'] = []
-        if 'shaper' in msg:
-            crops = msg['shaper']
-            if len(crops) > 0:
-                for crop in crops:
+        if 'tracks' in msg:
+            shaper = msg['shaper']
+            for track in msg['tracks']:
+                tid = track['tid']
+                if tid not in self._features:
+                    crop = shaper[tid]
                     feature = self._model.inference(crop)
-                    logger.info(f'features: {feature}')
-                    msg['features'].append(feature)
+                    self._features[tid] = feature
+                    logger.info(f'target {tid} features: {feature}')
+                else:
+                    logger.info(f'target {tid} is being reid , feature: {self._features[tid]}')
 
-        logger.info(msg['features'])
+        if 'failed_ids' in msg:
+            fids = msg['failed_ids']
+            if len(fids) > 0:
+                for fid in fids:
+                    if fid in self._features:
+                        self._features.pop(fid)
+
         logger.debug(f'↑↑↑↑↑↑-----------reid------------------↑↑↑↑↑↑')
+        msg['features'] = self._features
         self.out.send(envelope)
