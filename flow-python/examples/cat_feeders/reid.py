@@ -39,7 +39,7 @@ class ReID:
 
         msg = envelope.msg
 
-        logger.debug(f'↓↓↓↓↓↓-----------reid------------------↓↓↓↓↓↓')
+        # logger.debug(f'↓↓↓↓↓↓-----------reid------------------↓↓↓↓↓↓')
 
         if 'tracks' in msg:
             shaper = msg['shaper']
@@ -49,9 +49,9 @@ class ReID:
                     crop = shaper[tid]
                     feature = self._model.inference(crop)
                     self._features[tid] = feature
-                    logger.info(f'target {tid} features: {feature}')
-                else:
-                    logger.info(f'target {tid} is being reid , feature: {self._features[tid]}')
+                #     logger.info(f'target {tid} features: {feature}')
+                # else:
+                #     logger.info(f'target {tid} is being reid , feature: {self._features[tid]}')
 
         if 'failed_ids' in msg:
             fids = msg['failed_ids']
@@ -60,6 +60,6 @@ class ReID:
                     if fid in self._features:
                         self._features.pop(fid)
 
-        logger.debug(f'↑↑↑↑↑↑-----------reid------------------↑↑↑↑↑↑')
+        # logger.debug(f'↑↑↑↑↑↑-----------reid------------------↑↑↑↑↑↑')
         msg['features'] = self._features
         self.out.send(envelope)

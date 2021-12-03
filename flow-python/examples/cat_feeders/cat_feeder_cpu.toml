@@ -9,7 +9,7 @@ nms = 0.45
 tsize = 640
 path = "models/cat_finder_models/yolox_s.mge"
 interval = 5
-visualize = 1
+visualize = 0
 device = "cpu"
 device_id = 0
 
@@ -43,13 +43,9 @@ connections = [
   { cap = 16, ports = ["track:out", "shaper:inp"] },
   { cap = 16, ports = ["shaper:out", "reid_video:inp"] },
   { cap = 16, ports = ["reid_video:out", "redis_proxy:inp"] },
-  { cap = 16, ports = ["redis_proxy:out", "display:inp"] },
+  { cap = 16, ports = ["redis_proxy:out", "name:inp"] },
+  { cap = 16, ports = ["name:out", "display:inp"] },
 ]
-
-    [[graphs.nodes]]
-    name = "display"
-    ty = "Display"
-    show_img = 1
 
     [[graphs.nodes]]
     name = "track"
@@ -59,6 +55,15 @@ connections = [
     name = "shaper"
     ty = "Shaper"
     mode = "BEST"
+
+    [[graphs.nodes]]
+    name = "name"
+    ty = "Name"
+
+    [[graphs.nodes]]
+    name = "display"
+    ty = "Display"
+    show_img = 1
 
 
 [[graphs]]
@@ -71,7 +76,7 @@ connections = [
     [[graphs.nodes]]
     name = "source"
     ty = "Capture"
-    cap_id = "/home/rcxxx/Videos/two-cat-02.mp4"
+    cap_id = "/home/rcxxx/Videos/two-cat-01.mp4"
 
     [[graphs.nodes]]
     name = "destination"

@@ -26,7 +26,7 @@ class Track:
 
         msg = envelope.msg
         if msg['process']:
-            logger.debug(f'↓↓↓↓↓↓-----------track------------------↓↓↓↓↓↓')
+            # logger.debug(f'↓↓↓↓↓↓-----------track------------------↓↓↓↓↓↓')
             items = msg['items']
 
             tracks, failed_ids = self._tracker.track(items)
@@ -40,5 +40,5 @@ class Track:
             for failed_id in failed_ids:
                 logger.info(f'track target: {failed_id}')
 
-            logger.debug(f'↑↑↑↑↑↑-----------track------------------↑↑↑↑↑↑')
+            # logger.debug(f'↑↑↑↑↑↑-----------track------------------↑↑↑↑↑↑')
         self.out.send(envelope)

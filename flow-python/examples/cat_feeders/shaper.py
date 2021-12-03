@@ -42,7 +42,7 @@ class Shaper:
             return
 
         msg = envelope.msg
-        logger.debug(f'↓↓↓↓↓↓-----------shaper------------------↓↓↓↓↓↓')
+        # logger.debug(f'↓↓↓↓↓↓-----------shaper------------------↓↓↓↓↓↓')
         if 'tracks' in msg:
             for track in msg['tracks']:
                 tid = track['tid']
@@ -54,9 +54,9 @@ class Shaper:
                     crop = data[t:b, l:r]
                     assert crop is not None
                     self._shaper[tid] = crop
-                    logger.info(f'shaper target: {tid}')
-                else:
-                    logger.info(f'target: {tid} is being tracked')
+                #     logger.info(f'shaper target: {tid}')
+                # else:
+                #     logger.info(f'target: {tid} is being tracked')
 
         if 'failed_ids' in msg:
             fids = msg['failed_ids']
@@ -65,6 +65,6 @@ class Shaper:
                     if fid in self._shaper:
                         self._shaper.pop(fid)
 
-        logger.debug(f'↑↑↑↑↑↑-----------shaper------------------↑↑↑↑↑↑')
+        # logger.debug(f'↑↑↑↑↑↑-----------shaper------------------↑↑↑↑↑↑')
         msg['shaper'] = self._shaper
         self.out.send(envelope)

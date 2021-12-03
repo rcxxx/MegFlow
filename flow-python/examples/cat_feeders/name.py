@@ -7,7 +7,6 @@ from loguru import logger
 class Name:
     def __init__(self, name, args):
         self.name = name
-        self._cat = dict()
 
     def exec(self):
         #     msg['data']       -- frame
@@ -32,10 +31,22 @@ class Name:
             if len(tracks) > 0:
                 for track in tracks:
                     tid = track['tid']
-                    result = results[tid]
-                    name = result["name"]
+                    box = track['bbox']
+                    name = results[tid]["name"]
 
+                    tl_x = int(box[0])
+                    tl_y = int(box[1])
+                    br_x = int(box[2])
+                    br_y = int(box[3])
+                    w = br_x - tl_x
+                    h = br_y - tl_y
 
+                    cv2.rectangle(data, (tl_x, tl_y), (br_x, br_y), (220, 255, 20), 2)
+                    text = '{}'.format(name)
+
+                    put_x = int(tl_x + w * 0.06)
+                    put_y = int(tl_y - h * 0.02)
+                    cv2.putText(data, text, (put_x, put_y), cv2.FONT_HERSHEY_COMPLEX, 1, (220, 255, 20), 2)
 
         msg['data'] = data
         self.out.send(envelope)
