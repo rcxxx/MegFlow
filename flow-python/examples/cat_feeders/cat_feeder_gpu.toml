@@ -20,6 +20,7 @@ ip = "127.0.0.1"
 port = "6379"
 mode = "search"
 prefix = "feature."
+log = 0
 
 
 [[nodes]]
@@ -28,6 +29,7 @@ ty = "ReID"
 path = "models/cat_finder_models/resnet50.mge"
 device = "gpu"
 device_id = 0
+log = 0
 
 [[graphs]]
 name = "subgraph"
@@ -46,20 +48,24 @@ connections = [
     [[graphs.nodes]]
     name = "track"
     ty = "Track"
+    log = 0
 
     [[graphs.nodes]]
     name = "shaper"
     ty = "Shaper"
     mode = "BEST"
+    log = 0
 
     [[graphs.nodes]]
     name = "name"
     ty = "Name"
+    log = 0
 
     [[graphs.nodes]]
     name = "display"
     ty = "Display"
     show_img = 1
+    log = 0
 
 [[graphs]]
 name = "cat_finder_camera"

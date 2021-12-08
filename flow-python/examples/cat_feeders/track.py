@@ -9,12 +9,15 @@ from warehouse.track_iou import Tracker
 
 @register(inputs=['inp'], outputs=['out'])
 class Track:
-    def __init__(self, name, _):
+    def __init__(self, name, args):
         self.name = name
         self._tracker = Tracker()
 
+        self._log = args['log']
+
     def exec(self):
         #     msg['data']       -- frame
+        #     msg['feeding']    -- feeding args
         #     msg['items']      -- All detected cats
         #     msg['process']    -- process
         # add msg['tracks']     -- all tracked targets
@@ -26,7 +29,8 @@ class Track:
 
         msg = envelope.msg
         if msg['process']:
-            # logger.debug(f'↓↓↓↓↓↓-----------track------------------↓↓↓↓↓↓')
+            if self._log:
+                logger.debug(f'↓↓↓↓↓↓-----------track------------------↓↓↓↓↓↓')
             items = msg['items']
 
             tracks, failed_ids = self._tracker.track(items)
@@ -35,10 +39,13 @@ class Track:
 
             for track in tracks:
                 tid = track['tid']
-                logger.info(f'track target: {tid}')
+                if self._log:
+                    logger.info(f'track target: {tid}')
 
             for failed_id in failed_ids:
-                logger.info(f'track target: {failed_id}')
+                if self._log:
+                    logger.info(f'track target: {failed_id}')
 
-            # logger.debug(f'↑↑↑↑↑↑-----------track------------------↑↑↑↑↑↑')
+            if self._log:
+                logger.debug(f'↑↑↑↑↑↑-----------track------------------↑↑↑↑↑↑')
         self.out.send(envelope)

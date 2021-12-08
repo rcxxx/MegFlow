@@ -8,6 +8,7 @@ class Shaper:
         self.name = name
         self._mode = args['mode']
         self._shaper = dict()
+        self._log = args['log']
 
     def expand(self, box, max_w, max_h, ratio):
         l = box[0]
@@ -31,6 +32,7 @@ class Shaper:
 
     def exec(self):
         #     msg['data']       -- frame
+        #     msg['feeding']    -- feeding args
         #     msg['items']      -- All detected cats
         #     msg['process']    -- process
         #     msg['tracks']     -- all tracked targets
@@ -42,7 +44,8 @@ class Shaper:
             return
 
         msg = envelope.msg
-        # logger.debug(f'↓↓↓↓↓↓-----------shaper------------------↓↓↓↓↓↓')
+        if self._log:
+            logger.debug(f'↓↓↓↓↓↓-----------shaper------------------↓↓↓↓↓↓')
         if 'tracks' in msg:
             for track in msg['tracks']:
                 tid = track['tid']
@@ -54,9 +57,11 @@ class Shaper:
                     crop = data[t:b, l:r]
                     assert crop is not None
                     self._shaper[tid] = crop
-                #     logger.info(f'shaper target: {tid}')
-                # else:
-                #     logger.info(f'target: {tid} is being tracked')
+                    if self._log:
+                        logger.info(f'shaper target: {tid}')
+                else:
+                    if self._log:
+                        logger.info(f'target: {tid} is being tracked')
 
         if 'failed_ids' in msg:
             fids = msg['failed_ids']
@@ -65,6 +70,7 @@ class Shaper:
                     if fid in self._shaper:
                         self._shaper.pop(fid)
 
-        # logger.debug(f'↑↑↑↑↑↑-----------shaper------------------↑↑↑↑↑↑')
+        if self._log:
+            logger.debug(f'↑↑↑↑↑↑-----------shaper------------------↑↑↑↑↑↑')
         msg['shaper'] = self._shaper
         self.out.send(envelope)

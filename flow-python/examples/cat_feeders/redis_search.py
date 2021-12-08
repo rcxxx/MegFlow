@@ -24,6 +24,9 @@ class RedisSearch:
         self._pool = redis.ConnectionPool(host=ip,
                                             port=port,
                                             decode_responses=False)
+        self._results = dict()
+
+        self._log = args['log']
 
     def search_key(self, r, feature):
         redis_keys = r.keys(self._prefix + '*')
@@ -61,6 +64,7 @@ class RedisSearch:
 
     def exec(self):
         #     msg['data']       -- frame
+        #     msg['feeding']    -- feeding args
         #     msg['items']      -- All detected cats
         #     msg['process']    -- process
         #     msg['tracks']     -- all tracked targets
@@ -70,19 +74,29 @@ class RedisSearch:
         # add msg['results']    -- all reid results
         envelope = self.inp.recv()
         if envelope is None:
+            self._results.clear()
             return
         msg = envelope.msg
         items = msg['items']
         assert isinstance(items, list)
         r = redis.Redis(connection_pool=self._pool)
 
-        results = dict()
         if 'tracks' in msg:
+            tracks = msg['tracks']
             features = msg['features']
-            for track in msg['tracks']:
-                tid = track['tid']
-                results[tid] = self.search_key(r, features[tid])
-                logger.info(f'target {tid} result : {results[tid]["name"]}')
+            if len(tracks) > 0:
+                for track in msg['tracks']:
+                    tid = track['tid']
+                    if tid not in self._results:
+                        self._results[tid] = self.search_key(r, features[tid])
+                        logger.info(f'target {tid} result : {self._results[tid]["name"]}')
 
-        msg['results'] = results
+        if 'failed_ids' in msg:
+            fids = msg['failed_ids']
+            if len(fids) > 0:
+                for fid in fids:
+                    if fid in self._shaper:
+                        self._results.pop(fid)
+
+        msg['results'] = self._results
         self.out.send(envelope)

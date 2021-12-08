@@ -23,8 +23,11 @@ class ReID:
         self._model.inference(warmup_data)
         logger.info(" ReIDVideo INV Reid loaded.")
 
+        self._log = args['log']
+
     def exec(self):
         #     msg['data']       -- frame
+        #     msg['feeding']    -- feeding args
         #     msg['items']      -- All detected cats
         #     msg['process']    -- process
         #     msg['tracks']     -- all tracked targets
@@ -39,7 +42,8 @@ class ReID:
 
         msg = envelope.msg
 
-        # logger.debug(f'↓↓↓↓↓↓-----------reid------------------↓↓↓↓↓↓')
+        if self._log:
+            logger.debug(f'↓↓↓↓↓↓-----------reid------------------↓↓↓↓↓↓')
 
         if 'tracks' in msg:
             shaper = msg['shaper']
@@ -49,17 +53,17 @@ class ReID:
                     crop = shaper[tid]
                     feature = self._model.inference(crop)
                     self._features[tid] = feature
-                #     logger.info(f'target {tid} features: {feature}')
-                # else:
-                #     logger.info(f'target {tid} is being reid , feature: {self._features[tid]}')
+                    logger.info(f'new target: {tid}')
 
         if 'failed_ids' in msg:
             fids = msg['failed_ids']
             if len(fids) > 0:
                 for fid in fids:
                     if fid in self._features:
+                        logger.info(f'lost target: {fid}')
                         self._features.pop(fid)
 
-        # logger.debug(f'↑↑↑↑↑↑-----------reid------------------↑↑↑↑↑↑')
+        if self._log:
+            logger.debug(f'↑↑↑↑↑↑-----------reid------------------↑↑↑↑↑↑')
         msg['features'] = self._features
         self.out.send(envelope)
