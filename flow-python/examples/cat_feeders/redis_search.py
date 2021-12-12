@@ -95,7 +95,7 @@ class RedisSearch:
             fids = msg['failed_ids']
             if len(fids) > 0:
                 for fid in fids:
-                    if fid in self._shaper:
+                    if fid in self._results:
                         self._results.pop(fid)
 
         msg['results'] = self._results

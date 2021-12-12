@@ -9,7 +9,7 @@ nms = 0.45
 tsize = 640
 path = "models/cat_finder_models/yolox_s.mge"
 interval = 5
-visualize = 1
+visualize = 0
 device = "gpu"
 device_id = 0
 
@@ -31,18 +31,29 @@ device = "gpu"
 device_id = 0
 log = 0
 
+[[nodes]]
+name = "serial_port"
+ty = "SerialPort"
+port = "/dev/ttyACM0"
+baudrate = 115200
+timeout = 0.01
+log = 1
+
+
 [[graphs]]
 name = "subgraph"
-inputs = [{ name = "inp", cap = 16, ports = ["det:inp"] }]
+inputs = [{ name = "inp", cap = 16, ports = ["serial_port:inp"] }]
 outputs = [{ name = "out", cap = 16, ports = ["display:out"] }]
 connections = [
   # Custom
+  { cap = 16, ports = ["serial_port:out", "det:inp"] },
   { cap = 16, ports = ["det:out", "track:inp"] },
   { cap = 16, ports = ["track:out", "shaper:inp"] },
   { cap = 16, ports = ["shaper:out", "reid_video:inp"] },
   { cap = 16, ports = ["reid_video:out", "redis_proxy:inp"] },
   { cap = 16, ports = ["redis_proxy:out", "name:inp"] },
-  { cap = 16, ports = ["name:out", "display:inp"] },
+  { cap = 16, ports = ["name:out", "feeder:inp"] },
+  { cap = 16, ports = ["feeder:out", "display:inp"] },
 ]
 
     [[graphs.nodes]]
