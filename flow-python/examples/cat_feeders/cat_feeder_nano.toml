@@ -110,7 +110,7 @@ connections = [
     [[graphs.nodes]]
     name = "source"
     ty = "Capture"
-    cap_id = 2
+    cap_id = 0
 
     [[graphs.nodes]]
     name = "destination"

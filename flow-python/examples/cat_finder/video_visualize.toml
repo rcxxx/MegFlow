@@ -37,7 +37,7 @@ connections = [
   { cap = 16, ports = ["track:out", "shaper:inp"] },
   { cap = 16, ports = ["shaper:out", "reid_video:inp"] },
   { cap = 16, ports = ["shaper:visualize", "visualize:inp"]},
-  { cap = 16, ports = ["reid_video:out", "redis_proxy:inp"] },
+  { cap = 16, ports = ["reid_video:out", "redis_proxy:inp"]},
 ]
 
     [[graphs.nodes]]
