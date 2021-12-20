@@ -18,7 +18,6 @@ name = "redis_proxy"
 ty = "RedisSearch"
 ip = "127.0.0.1"
 port = "6379"
-mode = "search"
 prefix = "feature."
 log = 0
 
@@ -34,7 +33,7 @@ log = 0
 [[nodes]]
 name = "serial_port"
 ty = "SerialPort"
-port = "/dev/ttyACM0"
+port = "/dev/ttyTHS1"
 baudrate = 115200
 timeout = 0.01
 serial_on = 0

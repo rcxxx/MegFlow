@@ -42,9 +42,6 @@ class ReID:
 
         msg = envelope.msg
 
-        if self._log:
-            logger.debug(f'↓↓↓↓↓↓-----------reid------------------↓↓↓↓↓↓')
-
         if 'tracks' in msg:
             shaper = msg['shaper']
             for track in msg['tracks']:
@@ -63,7 +60,5 @@ class ReID:
                         logger.info(f'lost target: {fid}')
                         self._features.pop(fid)
 
-        if self._log:
-            logger.debug(f'↑↑↑↑↑↑-----------reid------------------↑↑↑↑↑↑')
         msg['features'] = self._features
         self.out.send(envelope)

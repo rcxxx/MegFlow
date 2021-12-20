@@ -1,7 +1,7 @@
 from logging import log
-import time
 from megflow import register, Envelope
 from loguru import logger
+from threading import Timer
 
 
 @register(inputs=['inp'])
@@ -33,9 +33,8 @@ class NanoGPIO:
                 GPIO.setup(self._gpio, GPIO.OUT)
                 try:
                     GPIO.output(self._gpio, GPIO.HIGH)
-                    time.sleep(gpio_arg[0]/5)
-                    GPIO.output(self._gpio, GPIO.LOW)
-                    time.sleep(2)
+                    t = Timer(gpio_arg[0]/5, GPIO.output, (self._gpio, GPIO.LOW))
+                    t.start()
                 finally:
                     # 清除设置
                     GPIO.cleanup()

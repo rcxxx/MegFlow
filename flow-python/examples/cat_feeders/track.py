@@ -24,28 +24,22 @@ class Track:
         #     msg['failed_ids'] -- all lost targets
         envelope = self.inp.recv()
         if envelope is None:
-            logger.info('stream tracker finish')
             return
 
         msg = envelope.msg
         if msg['process']:
-            if self._log:
-                logger.debug(f'↓↓↓↓↓↓-----------track------------------↓↓↓↓↓↓')
             items = msg['items']
 
             tracks, failed_ids = self._tracker.track(items)
             msg['tracks'] = tracks
             msg['failed_ids'] = failed_ids
 
-            for track in tracks:
-                tid = track['tid']
-                if self._log:
+            if self._log:
+                for track in tracks:
+                    tid = track['tid']
                     logger.info(f'track target: {tid}')
 
-            for failed_id in failed_ids:
-                if self._log:
+                for failed_id in failed_ids:
                     logger.info(f'track target: {failed_id}')
 
-            if self._log:
-                logger.debug(f'↑↑↑↑↑↑-----------track------------------↑↑↑↑↑↑')
         self.out.send(envelope)

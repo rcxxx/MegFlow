@@ -78,11 +78,6 @@ class Detect:
                     items.append(item)
                 msg['items'] = items
 
-                # import cv2
-                # x = self._predictor.visual(outputs, data)
-                # name = 'frame{0:07d}.jpg'.format(envelope.partial_id)
-                # cv2.imwrite(name, x)
-
             if self._visualize == 1:
                 msg['data'] = self._predictor.visual(outputs, data)
 

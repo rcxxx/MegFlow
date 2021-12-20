@@ -55,11 +55,11 @@ class Name:
                     put_y = int(tl_y - h * 0.02)
 
                     if name in self._cat_dt:
-                        text = 'Dan Ta'
+                        text = 'Danta'
                         cv2.putText(data, text, (put_x, put_y), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 255), 2)
                         self._cats[tid] = [text, feeding[0], feeding[1]]
                     elif name in self._cat_ts:
-                        text = 'Tan Suan'
+                        text = 'Tansuan'
                         cv2.putText(data, text, (put_x, put_y), cv2.FONT_HERSHEY_COMPLEX, 1, (120, 120, 120), 2)
                         self._cats[tid] = [text, feeding[2], feeding[3]]
 

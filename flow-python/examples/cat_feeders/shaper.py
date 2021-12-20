@@ -6,7 +6,6 @@ from warehouse.quality_naive import Quality
 class Shaper:
     def __init__(self, name, args):
         self.name = name
-        self._mode = args['mode']
         self._shaper = dict()
         self._log = args['log']
 
@@ -44,8 +43,6 @@ class Shaper:
             return
 
         msg = envelope.msg
-        if self._log:
-            logger.debug(f'↓↓↓↓↓↓-----------shaper------------------↓↓↓↓↓↓')
         if 'tracks' in msg:
             for track in msg['tracks']:
                 tid = track['tid']
@@ -70,7 +67,5 @@ class Shaper:
                     if fid in self._shaper:
                         self._shaper.pop(fid)
 
-        if self._log:
-            logger.debug(f'↑↑↑↑↑↑-----------shaper------------------↑↑↑↑↑↑')
         msg['shaper'] = self._shaper
         self.out.send(envelope)

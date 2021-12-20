@@ -18,7 +18,6 @@ name = "redis_proxy"
 ty = "RedisSearch"
 ip = "127.0.0.1"
 port = "6379"
-mode = "search"
 prefix = "feature."
 log = 0
 
