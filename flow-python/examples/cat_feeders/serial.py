@@ -8,8 +8,6 @@ class SerialPort:
     def __init__(self, name, args):
         self.name = name
         self._feeding = [5, 5, 10, 5]
-        self._str = 'none'
-        self._log = args['log']
         self._serial_on = args['serial_on']
         if self._serial_on:
             self._serial = serial.Serial(args['port'], baudrate=args['baudrate'], timeout=args['timeout'])
@@ -34,6 +32,4 @@ class SerialPort:
 
         msg = envelope.msg
         msg['feeding'] = self._feeding
-        if self._log:
-            logger.info(msg['feeding'])
         self.out.send(envelope)

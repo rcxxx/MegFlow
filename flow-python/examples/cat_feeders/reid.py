@@ -23,8 +23,6 @@ class ReID:
         self._model.inference(warmup_data)
         logger.info(" ReIDVideo INV Reid loaded.")
 
-        self._log = args['log']
-
     def exec(self):
         #     msg['data']       -- frame
         #     msg['feeding']    -- feeding args

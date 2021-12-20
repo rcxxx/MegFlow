@@ -19,7 +19,6 @@ ty = "RedisSearch"
 ip = "127.0.0.1"
 port = "6379"
 prefix = "feature."
-log = 0
 
 
 [[nodes]]
@@ -28,7 +27,6 @@ ty = "ReID"
 path = "models/cat_finder_models/resnet50.mge"
 device = "gpu"
 device_id = 0
-log = 0
 
 [[nodes]]
 name = "serial_port"
@@ -37,7 +35,6 @@ port = "/dev/ttyTHS1"
 baudrate = 115200
 timeout = 0.01
 serial_on = 0
-log = 0
 
 
 [[graphs]]
@@ -65,19 +62,16 @@ connections = [
     [[graphs.nodes]]
     name = "shaper"
     ty = "Shaper"
-    mode = "BEST"
     log = 0
 
     [[graphs.nodes]]
     name = "name"
     ty = "Name"
-    log = 0
 
     [[graphs.nodes]]
     name = "display"
     ty = "Display"
     show_img = 1
-    log = 0
 
     [[graphs.nodes]]
     name = "feeder"
@@ -86,18 +80,12 @@ connections = [
     port = "6379"
     preset_time = 0
     cat_wait_time = 3
-    amount_dt = 20
-    times_dt = 5
-    amount_ts = 30
-    times_ts = 5
-    log = 1
 
     [[graphs.nodes]]
     name = "nano-gpio"
     ty = "NanoGPIO"
     nano = 0
     gpio = 37
-    log = 1
 
 [[graphs]]
 name = "cat_finder_camera"

@@ -19,7 +19,6 @@ ty = "RedisSearch"
 ip = "127.0.0.1"
 port = "6379"
 prefix = "feature."
-log = 0
 
 [[nodes]]
 name = "reid_video"
@@ -27,7 +26,6 @@ ty = "ReID"
 path = "models/cat_finder_models/resnet50.mge"
 device = "cpu"
 device_id = 1
-log = 0
 
 [[nodes]]
 name = "serial_port"
@@ -35,7 +33,6 @@ ty = "SerialPort"
 port = "/dev/ttyACM0"
 baudrate = 115200
 timeout = 0.01
-log = 1
 
 
 [[graphs]]
@@ -62,19 +59,16 @@ connections = [
     [[graphs.nodes]]
     name = "shaper"
     ty = "Shaper"
-    mode = "BEST"
     log = 0
 
     [[graphs.nodes]]
     name = "name"
     ty = "Name"
-    log = 0
 
     [[graphs.nodes]]
     name = "display"
     ty = "Display"
     show_img = 1
-    log = 0
 
     [[graphs.nodes]]
     name = "feeder"
@@ -83,11 +77,6 @@ connections = [
     port = "6379"
     preset_time = 0
     cat_wait_time = 5
-    amount_dt = 20
-    times_dt = 5
-    amount_ts = 30
-    times_ts = 5
-    log = 0
 
 [[graphs]]
 name = "cat_finder_camera"

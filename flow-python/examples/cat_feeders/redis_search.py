@@ -15,7 +15,6 @@ class RedisSearch:
     def __init__(self, name, args):
         logger.info("init redis pool...")
         self.name = name
-        self._mode = args['mode']
         self._prefix = args['prefix']
         self._db = dict()
 
