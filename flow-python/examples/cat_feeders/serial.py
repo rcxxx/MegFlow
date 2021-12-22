@@ -12,6 +12,7 @@ class SerialPort:
         if self._serial_on:
             self._serial = serial.Serial(args['port'], baudrate=args['baudrate'], timeout=args['timeout'])
             logger.info(self._serial)
+        self._log = args['log']
 
     def exec(self):
         #     msg['data']       -- frame
@@ -32,4 +33,6 @@ class SerialPort:
 
         msg = envelope.msg
         msg['feeding'] = self._feeding
+        if self._log:
+            logger.info(f'---- {self._feeding} ----')
         self.out.send(envelope)

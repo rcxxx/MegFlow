@@ -35,6 +35,7 @@ port = "/dev/ttyTHS1"
 baudrate = 115200
 timeout = 0.01
 serial_on = 1
+log = 1
 
 
 [[graphs]]
