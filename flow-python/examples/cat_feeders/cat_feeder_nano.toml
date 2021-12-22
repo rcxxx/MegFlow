@@ -80,7 +80,7 @@ connections = [
     ty = "Feeder"
     ip = "127.0.0.1"
     port = "6379"
-    preset_time = 0
+    preset_time = 1
     cat_wait_time = 3
     log = 1
 
