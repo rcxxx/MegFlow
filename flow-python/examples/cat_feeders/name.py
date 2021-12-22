@@ -10,7 +10,8 @@ class Name:
         self._cat_dt = ["danta", "danta_1", "danta_2", "danta_3", "danta_4",
                         "danta_5", "danta_6", "danta_7", "danta_8", "danta_9"]
         self._cat_ts = ["tansuan", "tansuan_1", "tansuan_2", "tansuan_3", "tansuan_4",
-                        "tansuan_5", "tansuan_6", "tansuan_7", "tansuan_8", "tansuan_9"]
+                        "tansuan_5", "tansuan_6", "tansuan_7", "tansuan_8", "tansuan_9",
+                        "tansuan_10", "tansuan_11"]
 
         self._log = args['log']
         self._cats = dict()
@@ -62,6 +63,10 @@ class Name:
                         text = 'Tansuan'
                         cv2.putText(data, text, (put_x, put_y), cv2.FONT_HERSHEY_COMPLEX, 1, (120, 120, 120), 2)
                         self._cats[tid] = [text, feeding[2], feeding[3]]
+                    else:
+                        text = 'Unknown'
+                        cv2.putText(data, text, (put_x, put_y), cv2.FONT_HERSHEY_COMPLEX, 1, (120, 120, 120), 2)
+                        self._cats[tid] = [text, 0, 0]
 
         msg['data'] = data
         msg['cats'] = self._cats

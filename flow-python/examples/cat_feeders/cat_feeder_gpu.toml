@@ -50,7 +50,6 @@ connections = [
   { cap = 16, ports = ["reid_video:out", "redis_proxy:inp"] },
   { cap = 16, ports = ["redis_proxy:out", "name:inp"] },
   { cap = 16, ports = ["name:out", "feeder:inp"] },
-  { cap = 16, ports = ["feeder:food", "nano-gpio:inp"] },
   { cap = 16, ports = ["feeder:out", "display:inp"] },
 ]
 
@@ -80,12 +79,6 @@ connections = [
     port = "6379"
     preset_time = 0
     cat_wait_time = 3
-
-    [[graphs.nodes]]
-    name = "nano-gpio"
-    ty = "NanoGPIO"
-    nano = 0
-    gpio = 37
 
 [[graphs]]
 name = "cat_finder_camera"

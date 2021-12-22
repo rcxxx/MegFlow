@@ -7,7 +7,6 @@ class Display:
     def __init__(self, name, args):
         self.name = name
         self._show = args['show_img']
-        self._log = args['log']
 
     def exec(self):
         #     msg['data']       -- frame
@@ -26,8 +25,6 @@ class Display:
             msg = envelope.msg
             dst = msg['data']
             cv2.imshow("dst", dst)
-            if self._log:
-                logger.debug("results shown as dst")
             cv2.waitKey(1)
 
         self.out.send(envelope)

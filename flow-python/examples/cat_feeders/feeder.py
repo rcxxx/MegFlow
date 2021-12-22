@@ -19,8 +19,8 @@ class Feeder:
         self._log = args['log']
     
     def isFeeding(self, name, time, feeding_times):
-        last_t_fmt = formatTimestamp(float(self._r.get(f'{name}.feeding.last_t')))
-        current_t_fmt = formatTimestamp(time)
+        last_t_fmt = self.formatTimestamp(float(self._r.get(f'{name}.feeding.last_t')))
+        current_t_fmt = self.formatTimestamp(time)
         new_date = (current_t_fmt[0] - last_t_fmt[0]) + (current_t_fmt[1] - last_t_fmt[1]) + (current_t_fmt[2] - last_t_fmt[2])
         if new_date > 0:
             # 日期超过一天
@@ -71,28 +71,29 @@ class Feeder:
                 for track in tracks:
                     tid = track['tid']
                     cat = cats[tid]
-                    # 判断猫咪在猫粮机前停留的时间
-                    if tid not in self._cat:
-                        # 猫咪第一次出现的时间
-                        self._cat[tid] = current_time
-                    else:
-                        start_time = float(self._cat[tid])
-                        stay_time = self.time_diff(current_time, start_time)
-                        if stay_time >= self._cat_wait_time:
-                            # 猫咪停留超过预设时间，设置当前时间为上一次喂食的时间
-                            if tid not in self._fed:
-                                self._fed[tid] = "fed"
-                                cat_name = cat[0]
-                                if self.isFeeding(cat[0], current_time, cat[2]):
-                                    io_msg = dict()
-                                    gpio_arg = [cat[1], cat[2]]
-                                    io_msg['gpio_arg'] = gpio_arg
-                                    self.food.send(Envelope.pack(io_msg))
+                    if (cat[0] == 'Danta') or (cat[0] == 'Tansuan'):
+                        # 判断猫咪在猫粮机前停留的时间
+                        if tid not in self._cat:
+                            # 猫咪第一次出现的时间
+                            self._cat[tid] = current_time
+                        else:
+                            start_time = float(self._cat[tid])
+                            stay_time = self.time_diff(current_time, start_time)
+                            if stay_time >= self._cat_wait_time:
+                                # 猫咪停留超过预设时间，设置当前时间为上一次喂食的时间
+                                if tid not in self._fed:
+                                    self._fed[tid] = "fed"
+                                    cat_name = cat[0]
+                                    if self.isFeeding(cat[0], current_time, cat[2]):
+                                        io_msg = dict()
+                                        gpio_arg = [cat[1], cat[2]]
+                                        io_msg['gpio_arg'] = gpio_arg
+                                        self.food.send(Envelope.pack(io_msg))
+                                        if self._log:
+                                            logger.debug(f'Start feeding {cat[0]}')
+                                else:
                                     if self._log:
-                                        logger.debug(f'Start feeding {cat[0]}')
-                            else:
-                                if self._log:
-                                    logger.debug(f'{cat[0]} has been fed')
+                                        logger.debug(f'{cat[0]} has been fed')
 
         if 'failed_ids' in msg:
             fids = msg['failed_ids']

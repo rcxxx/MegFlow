@@ -34,7 +34,7 @@ ty = "SerialPort"
 port = "/dev/ttyTHS1"
 baudrate = 115200
 timeout = 0.01
-serial_on = 0
+serial_on = 1
 
 
 [[graphs]]
@@ -67,6 +67,7 @@ connections = [
     [[graphs.nodes]]
     name = "name"
     ty = "Name"
+    log = 0
 
     [[graphs.nodes]]
     name = "display"
@@ -80,12 +81,13 @@ connections = [
     port = "6379"
     preset_time = 0
     cat_wait_time = 3
+    log = 1
 
     [[graphs.nodes]]
     name = "nano-gpio"
     ty = "NanoGPIO"
-    nano = 0
     gpio = 37
+    log = 1
 
 [[graphs]]
 name = "cat_finder_camera"

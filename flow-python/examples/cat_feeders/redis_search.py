@@ -25,8 +25,6 @@ class RedisSearch:
                                             decode_responses=False)
         self._results = dict()
 
-        self._log = args['log']
-
     def search_key(self, r, feature):
         redis_keys = r.keys(self._prefix + '*')
         for key in redis_keys:
