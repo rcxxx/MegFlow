@@ -30,7 +30,9 @@ class NanoGPIO:
                 logger.info(f'{gpio_arg}')
             try:
                 GPIO.output(self._gpio, GPIO.HIGH)
-                t = Timer(gpio_arg[0]/5, GPIO.output, (self._gpio, GPIO.LOW))
+                def gpio_low(self):
+                    GPIO.output(self._gpio, GPIO.LOW)
+                t = Timer(gpio_arg[0]/5, gpio_low)
                 t.start()
             finally:
                 # 清除设置

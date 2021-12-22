@@ -63,7 +63,7 @@ class Feeder:
         msg = envelope.msg
 
         # 当画面中有猫并且符合时间管理
-        if 'tracks' in msg and self._is_feeding:
+        if 'tracks' in msg:
             tracks = msg['tracks']
             cats = msg['cats']
             # 保证只有一只猫时才喂食
