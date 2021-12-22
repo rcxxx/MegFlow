@@ -33,6 +33,8 @@ class NanoGPIO:
                 GPIO.setup(self._gpio, GPIO.OUT)
                 GPIO.output(self._gpio, GPIO.HIGH)
                 def gpio_low(gpio):
+                    GPIO.setmode(GPIO.BOARD)
+                    GPIO.setup(gpio, GPIO.OUT)
                     GPIO.output(gpio, GPIO.LOW)
                 t = Timer(gpio_arg[0]/5, gpio_low, (self._gpio,))
                 t.start()
