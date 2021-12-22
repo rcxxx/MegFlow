@@ -32,7 +32,7 @@ class NanoGPIO:
                 GPIO.output(self._gpio, GPIO.HIGH)
                 def gpio_low(self):
                     GPIO.output(self._gpio, GPIO.LOW)
-                t = Timer(gpio_arg[0]/5, gpio_low)
+                t = Timer(gpio_arg[0]/5, gpio_low, (self))
                 t.start()
             finally:
                 # 清除设置
