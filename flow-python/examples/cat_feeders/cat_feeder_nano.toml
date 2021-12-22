@@ -87,7 +87,7 @@ connections = [
     [[graphs.nodes]]
     name = "nano-gpio"
     ty = "NanoGPIO"
-    gpio = 37
+    gpio = 12
     log = 1
 
 [[graphs]]
