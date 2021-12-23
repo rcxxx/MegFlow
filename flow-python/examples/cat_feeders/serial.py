@@ -23,7 +23,6 @@ class SerialPort:
         
         if self._serial_on:
             str = self._serial.read(6).hex()
-            print(str)
             if str is not None:
                 if str[0:2] == 'aa' and str[10:12] == 'ff':
                     feeding = []
