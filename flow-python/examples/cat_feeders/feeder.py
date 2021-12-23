@@ -27,9 +27,11 @@ class Feeder:
             self._r.set(f'{name}.feeding.times', 0)
 
         times = int(self._r.get(f'{name}.feeding.times'))
-        if ((current_t_fmt[3] - last_t_fmt[3]) >= self._preset_time or new_date) and (times < feeding_times):
+        preset_t = (current_t_fmt[3] - last_t_fmt[3]) * 60 + (current_t_fmt[4] - last_t_fmt[4])
+        if (preset_t >= self._preset_time or new_date) and (times < feeding_times):
             self._r.set(f'{name}.feeding.last_t', time)
-            self._r.set(f'{name}.feeding.times', (times + 1))
+            times += 1
+            self._r.set(f'{name}.feeding.times', times)
             return True
 
         return False
@@ -40,7 +42,8 @@ class Feeder:
         month = int(time.strftime('%m', local_time))
         day = int(time.strftime('%d', local_time))
         hour = int(time.strftime('%H', local_time))
-        timestamp = [year, month, day, hour]
+        minute = int(time.strftime('%M', local_time))
+        timestamp = [year, month, day, hour, minute]
         return timestamp
 
     def time_diff(self, _time_1, _time_2):
